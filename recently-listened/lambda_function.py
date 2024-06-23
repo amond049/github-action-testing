@@ -49,8 +49,8 @@ def lambda_handler(event, context):
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                    client_secret=CLIENT_SECRET,
                                                    redirect_uri=REDIRECT_URI,
-                                                   scope="user-read-recently-played",
-                                                   open_browser=False))
+                                                   scope="user-read-recently-played"
+                                                   ))
 
     result = sp.current_user_recently_played(limit=20)
 
@@ -60,21 +60,5 @@ def lambda_handler(event, context):
         'body': json.dumps('Hello from Lambda! This is the second one')
     }
 
-'''
-def main():
-    id = "3646292c293e4267bb6c48ab048d6a0c"
-    secret = "91bf3b806b744a0ebefe82ecb3229c74"
-    uri = "http://localhost:1234/"
+# May have to use some requests to get the authorization working
 
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=id,
-                                                   client_secret=secret,
-                                                   redirect_uri=uri,
-                                                   scope="user-read-recently-played",
-                                                   open_browser=False))
-
-    result = sp.current_user_recently_played(limit=20)
-
-    print(result)
-
-main()
-'''
