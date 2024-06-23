@@ -23,9 +23,9 @@ def lambda_handler(event, context):
     except ClientError as e:
         raise e
 
-    CLIENT_ID = get_response['CLIENT_ID']
-    CLIENT_SECRET = get_response['CLIENT_SECRET']
-    REDIRECT_URI = get_response['REDIRECT_URI']
+    CLIENT_ID = get_response['SecretString']['CLIENT_ID']
+    CLIENT_SECRET = get_response['SecretString']['CLIENT_SECRET']
+    REDIRECT_URI = get_response['SecretString']['REDIRECT_URI']
 
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                    client_secret=CLIENT_SECRET,
