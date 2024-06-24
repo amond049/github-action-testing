@@ -16,6 +16,10 @@ app = Flask(__name__)
 
 # This is the link to the Lambda https://ebc2llbzrd4v43kqzwc6ctw2cy0jqjzb.lambda-url.us-east-2.on.aws/
 def lambda_handler(event, context):
+    # Some additional mappings are required because they don't exist in the new version of AWS
+    event['httpMethod'] = event['requestContext']['http']['method']
+    event['path'] = event['requestContext']['http']['path']
+    event['queryStringParameters'] = event.get('queryStringParameters', {})
     return awsgi.response(app, event, context)
 
 # May have to use some requests to get the authorization working
