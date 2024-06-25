@@ -4,7 +4,7 @@ import json
 from botocore.exceptions import ClientError
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, redirect
+from flask import Flask, redirect, request
 import awsgi
 
 # Thinking of using a Flask application to navigate the authorization
@@ -47,14 +47,14 @@ def lambda_handler(event, context):
     return awsgi.response(app, event, context)
 
 
-# May have to use some requests to get the authorization working
+auth_manager = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri=REDIRECT_URI)
 @app.route("/")
 def index():
-    auth_manager = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri=REDIRECT_URI)
     sp = spotipy.Spotify(auth_manager=auth_manager)
 
     return redirect(auth_manager.get_authorize_url())
 
 @app.route("/callback")
 def callback():
-    return "Let's see if this works"
+    token = auth_manager.get_access_token(request.args.get("code"))
+    return "<p>This is the token" + token + "</p>"
