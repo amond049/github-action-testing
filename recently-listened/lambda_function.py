@@ -14,14 +14,14 @@ app = Flask(__name__)
 sp = None
 
 
-# ProductiOn Development 
+# Production Development
+
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 REDIRECT_URI = ""
 
 
-scope = "user-read-recently-played"
-
+# Production Development
 
 secret_name = 'mickeys-marvels/spotipy'
 region = 'us-east-2'
@@ -62,4 +62,4 @@ def callback():
     # Needed to add the token to the Spotify instance because Lambda cannot write to the cache (without VPC, which is a paid service)
     sp = spotipy.Spotify(auth_manager=auth_manager, auth=token)
     result = sp.current_user_recently_played(limit=20)
-    return "<p>This is the token" + token + str(result) + "</p>"
+    return result
