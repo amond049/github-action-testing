@@ -13,11 +13,15 @@ app = Flask(__name__)
 # Setting it to None for the time being
 sp = None
 
+
+# ProductiOn Development 
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 REDIRECT_URI = ""
 
+
 scope = "user-read-recently-played"
+
 
 secret_name = 'mickeys-marvels/spotipy'
 region = 'us-east-2'
@@ -32,7 +36,7 @@ try:
     secret_string = response['SecretString']
 
     CLIENT_ID = secret_string[14:46]
-    CLIENT_SECRET = secret_string[65:98]
+    CLIENT_SECRET = secret_string[65:97]
     REDIRECT_URI = secret_string[115:len(secret_string) - 2]
 
 except ClientError as e:
@@ -50,11 +54,11 @@ def lambda_handler(event, context):
 auth_manager = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri=REDIRECT_URI)
 @app.route("/")
 def index():
-    sp = spotipy.Spotify(auth_manager=auth_manager)
-
     return redirect(auth_manager.get_authorize_url())
 
 @app.route("/callback")
 def callback():
-    token = auth_manager.get_access_token(request.args.get("code"))
-    return "<p>This is the token" + token + "</p>"
+    token = auth_manager.get_access_token(request.args.get("code"), as_dict=False)
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+    result = sp.current_user_recently_played(limit=20)
+    return "<p>This is the token" + token + str(result) + "</p>"
