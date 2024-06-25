@@ -16,6 +16,7 @@ sp = None
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 REDIRECT_URI = ""
+
 scope = "user-read-recently-played"
 
 secret_name = 'mickeys-marvels/spotipy'
@@ -38,8 +39,6 @@ except ClientError as e:
     print("Something went wrong, printing error information")
     print(e)
 
-
-# This is the link to the Lambda https://ebc2llbzrd4v43kqzwc6ctw2cy0jqjzb.lambda-url.us-east-2.on.aws/
 def lambda_handler(event, context):
     # Some additional mappings are required because they don't exist in the new version of AWS
     event['httpMethod'] = event['requestContext']['http']['method']
@@ -51,8 +50,11 @@ def lambda_handler(event, context):
 # May have to use some requests to get the authorization working
 @app.route("/")
 def index():
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri=REDIRECT_URI))
-    
+    auth_manager = SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri=REDIRECT_URI)
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+
+    return redirect(auth_manager.get_authorize_url())
+
 @app.route("/callback")
 def callback():
     return "Let's see if this works"
