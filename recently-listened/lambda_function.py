@@ -15,10 +15,10 @@ sp = None
 
 
 # Production Development
-
 CLIENT_ID = ""
 CLIENT_SECRET = ""
 REDIRECT_URI = ""
+scope = "user-read-recently-played"
 
 
 # Production Development
