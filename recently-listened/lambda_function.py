@@ -59,6 +59,7 @@ def index():
 @app.route("/callback")
 def callback():
     token = auth_manager.get_access_token(request.args.get("code"), as_dict=False)
-    sp = spotipy.Spotify(auth_manager=auth_manager)
+    # Needed to add the token to the Spotify instance because Lambda cannot write to the cache (without VPC, which is a paid service)
+    sp = spotipy.Spotify(auth_manager=auth_manager, auth=token)
     result = sp.current_user_recently_played(limit=20)
     return "<p>This is the token" + token + str(result) + "</p>"
