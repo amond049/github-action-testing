@@ -33,4 +33,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
           aws-region: us-east-2
       - run: zip -j lambda2.zip ./recently-listened/lambda_function.py
-      - run: aws lambda update-function-code --function-name=getRecentTracks --zip-file=fileb://lambda2.zip
+      - run: aws lambda update-function-code --function-name=spotify-recently-listened --zip-file=fileb://lambda2.zip
