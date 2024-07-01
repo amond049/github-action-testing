@@ -10,6 +10,12 @@ CLIENT_SECRET = os.environ['CLIENT_SECRET']
 REDIRECT_URI = os.environ['REDIRECT_URI']
 REFRESH_TOKEN = os.environ['REFRESH_TOKEN']
 
+class Track:
+    def __init__(self, track_name, album_cover_link, album_link, artists):
+        self.track_name = track_name
+        self.album_cover_link = album_cover_link
+        self.album_link = album_link
+        self.artists = artists
 
 def get_recently_played(token):
     # This is where the most recent 20 tracks will be retrieved
@@ -19,7 +25,21 @@ def get_recently_played(token):
         headers={'Authorization': 'Bearer ' + token}
     )
 
-    return response
+    response_as_json = response.json()
+    tracks_list = []
+
+    for item in response_as_json['items']:
+        track_name = item['track']['name']
+        album_cover_link = item['track']['album']['images'][0]['url']
+        album_link = item['track']['album']['images'][0]['url']
+        artists = item['track']['artists']
+
+        new_track = Track(track_name, album_cover_link, album_link, artists)
+        tracks_list.append(new_track)
+
+    return tracks_list
+
+
 
 
 def refresh_token():
@@ -39,5 +59,9 @@ def lambda_handler(event, context):
     tracks = get_recently_played(new_token)
     return {
         'statusCode': 200,
-        'body': json.dumps(tracks.json())
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
+        # TODO: Will need to update the body of the returned status
+        'body': json.dumps(tracks)
     }
