@@ -61,6 +61,8 @@ def refresh_token():
 
 def lambda_handler(event, context):
     new_token = refresh_token()
+    # Will need some sort of verification here regarding the event and endpoint is being called, can then correctly call the lambda function
+
     tracks = get_recently_played(new_token)
     return {
         'statusCode': 200,
